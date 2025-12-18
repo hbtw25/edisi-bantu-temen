@@ -25,7 +25,7 @@ const CACHE_ON_DEMAND = [
 
 self.addEventListener('install', (event) => {
     console.log('Service Worker: Installing...');
-    
+
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => {
@@ -46,7 +46,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
     console.log('⚡ Service Worker: Activating...');
-    
+
     event.waitUntil(
         caches.keys()
             .then((cacheNames) => {
@@ -72,42 +72,42 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const { request } = event;
     const url = new URL(request.url);
-    
+
     // Skip non-GET requests
     if (request.method !== 'GET') {
         return;
     }
-    
+
     // Skip chrome-extension and other non-http(s) requests
     if (!url.protocol.startsWith('http')) {
         return;
     }
-    
+
     event.respondWith(
         caches.match(request)
             .then((cachedResponse) => {
                 // Return cached response if available
                 if (cachedResponse) {
                     console.log('Service Worker: Serving from cache:', request.url);
-                    
+
                     // Update cache in background (stale-while-revalidate)
                     fetchAndCache(request);
-                    
+
                     return cachedResponse;
                 }
-                
+
                 // Fetch from network and cache
                 console.log('Service Worker: Fetching from network:', request.url);
                 return fetchAndCache(request);
             })
             .catch((error) => {
                 console.error('Service Worker: Fetch failed:', error);
-                
+
                 // Return offline page for navigation requests
                 if (request.mode === 'navigate') {
                     return caches.match('/index.html');
                 }
-                
+
                 // Return error for other requests
                 return new Response('Offline - Content not available', {
                     status: 503,
@@ -129,16 +129,16 @@ function fetchAndCache(request) {
             if (!response || response.status !== 200 || response.type === 'error') {
                 return response;
             }
-            
+
             // Clone response (can only be consumed once)
             const responseToCache = response.clone();
-            
+
             caches.open(CACHE_NAME)
                 .then((cache) => {
                     cache.put(request, responseToCache);
                     console.log('Service Worker: Cached:', request.url);
                 });
-            
+
             return response;
         })
         .catch((error) => {
@@ -151,7 +151,7 @@ function fetchAndCache(request) {
 
 self.addEventListener('sync', (event) => {
     console.log('Service Worker: Background sync triggered');
-    
+
     if (event.tag === 'sync-data') {
         event.waitUntil(
             syncData()
@@ -169,10 +169,10 @@ async function syncData() {
 
 self.addEventListener('push', (event) => {
     console.log('Service Worker: Push notification received');
-    
+
     const options = {
         body: event.data ? event.data.text() : 'New content available!',
-        icon: '/icons/icon-192.png',
+        icon: '/LogoComputeAR.png',
         badge: '/icons/badge-72.png',
         vibrate: [200, 100, 200],
         data: {
@@ -192,7 +192,7 @@ self.addEventListener('push', (event) => {
             }
         ]
     };
-    
+
     event.waitUntil(
         self.registration.showNotification('ComputeAR Heritage', options)
     );
@@ -201,9 +201,9 @@ self.addEventListener('push', (event) => {
 // Handle notification clicks
 self.addEventListener('notificationclick', (event) => {
     console.log('Service Worker: Notification clicked');
-    
+
     event.notification.close();
-    
+
     if (event.action === 'explore') {
         event.waitUntil(
             clients.openWindow('/')
@@ -215,11 +215,11 @@ self.addEventListener('notificationclick', (event) => {
 
 self.addEventListener('message', (event) => {
     console.log('Service Worker: Message received:', event.data);
-    
+
     if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
     }
-    
+
     if (event.data && event.data.type === 'CACHE_URLS') {
         const urlsToCache = event.data.payload;
         event.waitUntil(
