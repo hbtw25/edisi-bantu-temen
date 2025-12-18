@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#db2777">
+    <title>Detail Komputer - ComputeAR Heritage</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/detail.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <button class="back-btn" onclick="goBack()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M19 12H5M12 19l-7-7 7-7" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Kembali
+        </button>
+        <h1>Detail Komputer</h1>
+        <button class="share-btn" onclick="shareDevice()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Memuat data...</p>
+    </div>
+
+    <!-- Main Content -->
+    <main id="mainContent" class="detail-container" style="display: none;">
+        <!-- Hero Section with 3D Preview -->
+        <section class="hero-section">
+            <div class="model-container" id="modelContainer">
+                <div class="model-viewer-wrapper" id="modelViewerWrapper">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                <button class="ar-button" id="arButton" style="display: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="3" width="18" height="18" rx="2" stroke-width="2"/>
+                        <path d="M9 3v18M3 9h18M3 15h18M15 3v18" stroke-width="2"/>
+                    </svg>
+                    Lihat dalam AR
+                </button>
+            </div>
+        </section>
+
+        <!-- Device Info -->
+        <section class="info-section">
+            <div class="info-header">
+                <div>
+                    <h1 id="deviceName" class="device-name">Loading...</h1>
+                    <p id="deviceManufacturer" class="manufacturer"></p>
+                </div>
+                <span id="deviceYear" class="year-badge"></span>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Era</span>
+                    <span id="deviceEra" class="stat-value">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Kategori</span>
+                    <span id="deviceCategory" class="stat-value">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Status</span>
+                    <span id="deviceStatus" class="stat-value">-</span>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="description-section">
+                <h2>✦ Deskripsi</h2>
+                <p id="deviceDescription" class="description-text"></p>
+            </div>
+
+            <!-- Historical Context -->
+            <div class="context-section">
+                <h2>✦ Konteks Historis</h2>
+                <p id="deviceContext" class="context-text"></p>
+            </div>
+
+            <!-- Specifications -->
+            <div class="specs-section">
+                <h2>✦ Spesifikasi Teknis</h2>
+                <div id="specsContainer" class="specs-grid">
+                    <!-- Specs will be dynamically loaded -->
+                </div>
+            </div>
+
+            <!-- Timeline Position -->
+            <div class="timeline-section">
+                <h2>✦ Posisi dalam Timeline</h2>
+                <div class="timeline-visual" id="timelineVisual">
+                    <!-- Timeline will be dynamically generated -->
+                </div>
+            </div>
+
+            <!-- Impact Section -->
+            <div class="impact-section">
+                <h2>✦ Dampak Teknologi</h2>
+                <p id="deviceImpact" class="impact-text"></p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn-primary" id="mainArButton" onclick="openARViewer()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="3" width="18" height="18" rx="2" stroke-width="2"/>
+                    </svg>
+                    Buka AR Viewer
+                </button>
+                <button class="btn-secondary" onclick="addToCollection()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" stroke-width="2"/>
+                    </svg>
+                    Tambah ke Koleksi
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- URUTAN PENTING! -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <script src="js/device-data.js"></script>  <!-- ← DULUAN -->
+    <script src="js/detail.js"></script>        <!-- ← KEDUA -->
+</body>
+</html>

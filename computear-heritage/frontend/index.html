@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Museum Virtual Sejarah Komputer dengan Augmented Reality">
+    <meta name="theme-color" content="#1a1a2e">
+    
+    <title>ComputeAR Heritage - Museum Sejarah Komputer</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>ComputeAR Heritage</h1>
+            </div>
+            <nav class="nav">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#collection" class="nav-link">Koleksi</a>
+                <a href="#timeline" class="nav-link">Timeline</a>
+                <a href="#about" class="nav-link">Tentang</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">Jelajahi Sejarah Komputer</h2>
+                <p class="hero-subtitle">
+                    Museum virtual interaktif dengan teknologi Augmented Reality
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="scrollToCollection()">
+                        Mulai Jelajah
+                    </button>
+                    <button class="btn btn-secondary" onclick="showARInfo()">
+                        Tentang AR
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">6+</div>
+                    <div class="stat-label">Komputer Bersejarah</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">80</div>
+                    <div class="stat-label">Tahun Sejarah</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">AR</div>
+                    <div class="stat-label">Teknologi Interaktif</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collection Section -->
+    <section id="collection" class="collection">
+        <div class="container">
+            <h2 class="section-title">Koleksi Komputer</h2>
+            <p class="section-subtitle">Dari era 1940-an hingga modern</p>
+            
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="tab active" data-era="all">Semua</button>
+                <button class="tab" data-era="1940s">1940s-1950s</button>
+                <button class="tab" data-era="1960s">1960s-1970s</button>
+                <button class="tab" data-era="1980s">1980s-1990s</button>
+                <button class="tab" data-era="2000s">2000s+</button>
+            </div>
+
+            <!-- Device Grid -->
+            <div class="device-grid" id="deviceGrid">
+                <!-- Device Card 1 -->
+                <div class="device-card" data-era="1940s">
+                    <div class="device-image">
+                        <img src="https://via.placeholder.com/300x200/1a1a2e/ffffff?text=ENIAC" alt="ENIAC">
+                        <div class="device-badge">1945</div>
+                    </div>
+                    <div class="device-info">
+                        <h3>ENIAC</h3>
+                        <p class="device-category">Komputer Elektronik Pertama</p>
+                        <p class="device-desc">Electronic Numerical Integrator and Computer</p>
+                        <div class="device-actions">
+                            <button class="btn-small btn-primary" onclick="viewDetail('eniac')">
+                                Detail
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Device Card 2 -->
+                <div class="device-card" data-era="1960s">
+                    <div class="device-image">
+                        <img src="https://via.placeholder.com/300x200/1a1a2e/ffffff?text=IBM+360" alt="IBM 360">
+                        <div class="device-badge">1964</div>
+                    </div>
+                    <div class="device-info">
+                        <h3>IBM System/360</h3>
+                        <p class="device-category">Mainframe Computer</p>
+                        <p class="device-desc">Keluarga komputer mainframe revolusioner</p>
+                        <div class="device-actions">
+                            <button class="btn-small btn-primary" onclick="viewDetail('ibm360')">
+                                Detail
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Device Card 3 -->
+                <div class="device-card" data-era="1980s">
+                    <div class="device-image">
+                        <img src="https://via.placeholder.com/300x200/1a1a2e/ffffff?text=Apple+II" alt="Apple II">
+                        <div class="device-badge">1977</div>
+                    </div>
+                    <div class="device-info">
+                        <h3>Apple II</h3>
+                        <p class="device-category">Personal Computer</p>
+                        <p class="device-desc">PC pertama dengan grafis berwarna</p>
+                        <div class="device-actions">
+                            <button class="btn-small btn-primary" onclick="viewDetail('appleii')">
+                                Detail
+                            </button>
+                            <button class="btn-small btn-ar" onclick="viewAR('appleii')">
+                                View in AR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Device Card 4 -->
+                <div class="device-card" data-era="1980s">
+                    <div class="device-image">
+                        <img src="https://via.placeholder.com/300x200/1a1a2e/ffffff?text=Commodore+64" alt="Commodore 64">
+                        <div class="device-badge">1982</div>
+                    </div>
+                    <div class="device-info">
+                        <h3>Commodore 64</h3>
+                        <p class="device-category">Home Computer</p>
+                        <p class="device-desc">Komputer pribadi terlaris sepanjang masa</p>
+                        <div class="device-actions">
+                            <button class="btn-small btn-primary" onclick="viewDetail('c64')">
+                                Detail
+                            </button>
+                            <button class="btn-small btn-ar" onclick="viewAR('c64')">
+                                View in AR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Device Card 5 -->
+                <div class="device-card" data-era="1980s">
+                    <div class="device-image">
+                        <img src="https://via.placeholder.com/300x200/1a1a2e/ffffff?text=IBM+PC" alt="IBM PC">
+                        <div class="device-badge">1981</div>
+                    </div>
+                    <div class="device-info">
+                        <h3>IBM PC 5150</h3>
+                        <p class="device-category">Personal Computer</p>
+                        <p class="device-desc">PC yang mendefinisikan standar industri</p>
+                        <div class="device-actions">
+                            <button class="btn-small btn-primary" onclick="viewDetail('ibmpc')">
+                                Detail
+                            </button>
+                            <button class="btn-small btn-ar" onclick="viewAR('ibmpc')">
+                                View in AR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Device Card 6 -->
+                <div class="device-card" data-era="2000s">
+                    <div class="device-image">
+                        <img src="https://via.placeholder.com/300x200/1a1a2e/ffffff?text=MacBook" alt="MacBook">
+                        <div class="device-badge">2006</div>
+                    </div>
+                    <div class="device-info">
+                        <h3>MacBook (Intel)</h3>
+                        <p class="device-category">Laptop</p>
+                        <p class="device-desc">Laptop pertama Apple dengan processor Intel</p>
+                        <div class="device-actions">
+                            <button class="btn-small btn-primary" onclick="viewDetail('macbook')">
+                                Detail
+                            </button>
+                            <button class="btn-small btn-ar" onclick="viewAR('macbook')">
+                                View in AR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section id="timeline" class="timeline-section">
+        <div class="container">
+            <h2 class="section-title">Timeline Evolusi Komputer</h2>
+            <p class="section-subtitle">Perjalanan 80 tahun inovasi teknologi</p>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">1945</div>
+                    <div class="timeline-content">
+                        <h3>Era Komputer Elektronik</h3>
+                        <p>ENIAC - Komputer elektronik pertama</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker">1960s</div>
+                    <div class="timeline-content">
+                        <h3>Era Mainframe</h3>
+                        <p>IBM System/360 mendefinisikan komputasi bisnis</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker">1970s</div>
+                    <div class="timeline-content">
+                        <h3>Lahirnya Personal Computer</h3>
+                        <p>Apple I & II membawa komputer ke rumah</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker">1980s</div>
+                    <div class="timeline-content">
+                        <h3>Era PC Modern</h3>
+                        <p>IBM PC dan Commodore 64 mendominasi pasar</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker">2000s</div>
+                    <div class="timeline-content">
+                        <h3>Era Mobile & Cloud</h3>
+                        <p>Laptop tipis, smartphone, dan komputasi awan</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">Tentang ComputeAR Heritage</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Museum Virtual Sejarah Komputer</h3>
+                    <p>
+                        ComputeAR Heritage adalah Progressive Web Application (PWA) yang menghadirkan 
+                        museum sejarah komputer secara virtual dengan teknologi Augmented Reality.
+                    </p>
+                    <p>
+                        Jelajahi evolusi teknologi komputer dari ENIAC (1945) hingga komputer modern, 
+                        lihat model 3D dalam skala sebenarnya, dan pelajari bagaimana teknologi 
+                        membentuk dunia digital kita.
+                    </p>
+                    
+                    <h4>Fitur Utama:</h4>
+                    <ul class="feature-list">
+                        <li>✦ Model 3D interaktif komputer bersejarah</li>
+                        <li>✦ Augmented Reality (AR) - lihat komputer di ruangan kamu</li>
+                        <li>✦ PWA - akses tanpa install</li>
+                        <li>✦ Timeline interaktif</li>
+                        <li>✦ Informasi detail & spesifikasi lengkap</li>
+                    </ul>
+                    
+                    <div class="team">
+                        <h4>Tim Pengembang:</h4>
+                        <p><strong>Kelompok 13</strong></p>
+                        <p>Sarah Nur Aqilah Tanjung (103032430026)</p>
+                        <p>Zeifira Naila Syakira (103032400082)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 ComputeAR Heritage - Kelompok 13</p>
+            <p>Tugas Besar Sistem Multimedia | Universitas Telkom</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="credits.html" style="color: #ec4899; text-decoration: none; font-weight: 500;">
+                    Credits & Attributions
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Install PWA Prompt (hidden by default) -->
+    <div id="installPrompt" class="install-prompt" style="display: none;">
+        <div class="install-content">
+            <h3>Install ComputeAR Heritage</h3>
+            <p>Install aplikasi ini ke home screen untuk pengalaman yang lebih baik!</p>
+            <div class="install-buttons">
+                <button class="btn btn-primary" id="installBtn">Install</button>
+                <button class="btn btn-secondary" id="dismissBtn">Nanti</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/device-data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
