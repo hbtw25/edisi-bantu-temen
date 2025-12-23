@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Viewer - ComputeAR Heritage</title>
+    
+    <!-- Model Viewer -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fce7f3, #fff);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #db2777;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .device-name {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        model-viewer {
+            width: 100vw;
+            height: calc(100vh - 120px);
+            background-color: transparent;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .btn {
+            background: #ec4899;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #db2777;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #db2777;
+            border: 2px solid #db2777;
+        }
+        
+        .btn-secondary:hover {
+            background: #fce7f3;
+        }
+        
+        .info-box {
+            position: fixed;
+            bottom: 80px;           
+            right: 20px;           
+            background: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 200px;      
+            font-size: 0.85rem;
+            z-index: 50;
+        }
+
+        .info-box h3 {
+            color: #db2777;
+            margin-bottom: 8px;
+            font-size: 0.9rem; 
+        }
+
+        .info-box p {
+            font-size: 0.75rem;    
+            color: #6b7280;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .info-box {
+                display: none;
+            }
+            
+            .controls {
+                flex-direction: column;
+                bottom: 10px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AR Viewer</h1>
+        <div class="device-name" id="deviceName">Loading...</div>
+    </div>
+    
+    <div class="info-box">
+        <h3>Tips AR</h3>
+        <p>
+            ✦ Rotate: Drag dengan 1 jari<br>
+            ✦ Zoom: Pinch dengan 2 jari<br>
+            ✦ Move: Drag dengan 2 jari<br>
+            ✦ AR: Klik tombol AR di pojok
+        </p>
+    </div>
+    
+    <model-viewer
+        id="modelViewer"
+        camera-controls
+        touch-action="pan-y"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        ar-scale="auto"
+        shadow-intensity="1"
+        exposure="1"
+        auto-rotate
+        rotation-per-second="30deg">
+        <!-- Ga ada slot progress-bar, biar loading default -->
+    </model-viewer>
+    
+    <div class="controls">
+        <button class="btn btn-secondary" onclick="goBack()">
+            ← Kembali
+        </button>
+        <button class="btn" onclick="resetView()">
+            Reset View
+        </button>
+    </div>
+    
+    <!-- Load device-data.js DULU -->
+    <script src="js/device-data.js"></script>
+    
+    <script>
+        // Get device ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const deviceId = urlParams.get('id');
+        
+        const modelViewer = document.getElementById('modelViewer');
+        const deviceNameEl = document.getElementById('deviceName');
+        
+        // Load dari device-data.js (BUKAN API)
+        function loadDevice() {
+            if (!deviceId) {
+                alert('Device ID not found!');
+                goBack();
+                return;
+            }
+            
+            console.log('Loading device:', deviceId);
+            
+            // Ambil data dari deviceDatabase (lokal)
+            const device = deviceDatabase[deviceId];
+            
+            if (!device) {
+                alert('Device not found!');
+                goBack();
+                return;
+            }
+            
+            console.log('✅ Device found:', device.name);
+            
+            // Set device name
+            deviceNameEl.textContent = device.name;
+            
+            // Set 3D model
+            if (device.hasModel && device.modelPath) {
+                console.log('Loading model:', device.modelPath);
+                modelViewer.src = device.modelPath;
+            } else {
+                alert('Model 3D tidak tersedia untuk komputer ini.');
+                goBack();
+            }
+        }
+        
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        
+        function resetView() {
+            modelViewer.cameraOrbit = 'auto auto auto';
+            modelViewer.fieldOfView = 'auto';
+        }
+        
+        // Initialize
+        loadDevice();
+        
+        // Model loaded event
+        modelViewer.addEventListener('load', () => {
+            console.log('3D Model loaded successfully!');
+        });
+        
+        // Error handling
+        modelViewer.addEventListener('error', (event) => {
+            console.error('Error loading model:', event);
+            alert('Gagal memuat model 3D. Pastikan file model tersedia.');
+        });
+    </script>
+</body>
+</html>

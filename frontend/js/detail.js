@@ -210,51 +210,9 @@ function openARViewer() {
         return;
     }
     
-    // FIX: Redirect ke AR viewer
+    // Redirect ke AR viewer
     console.log('Opening AR viewer for:', deviceId);
     window.location.href = `ar-viewer.html?id=${deviceId}`;
-}
-
-// Add to collection
-function addToCollection() {
-    const device = deviceDatabase[deviceId];
-    if (!device) return;
-
-    let collections = JSON.parse(localStorage.getItem('collections') || '[]');
-    
-    if (collections.some(item => item.id === deviceId)) {
-        alert('ℹ️ Komputer ini sudah ada di koleksi Anda!');
-        return;
-    }
-
-    collections.push({
-        id: device.id,
-        name: device.name,
-        manufacturer: device.manufacturer,
-        year: device.year,
-        addedAt: new Date().toISOString()
-    });
-
-    localStorage.setItem('collections', JSON.stringify(collections));
-    
-    // Success feedback
-    const btn = event.target.closest('button');
-    const originalHTML = btn.innerHTML;
-    
-    btn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        Berhasil Ditambahkan!
-    `;
-    btn.style.background = '#10b981';
-    btn.classList.add('success');
-    
-    setTimeout(() => {
-        btn.innerHTML = originalHTML;
-        btn.style.background = '';
-        btn.classList.remove('success');
-    }, 2000);
 }
 
 // Show error

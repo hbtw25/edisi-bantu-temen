@@ -1,8 +1,8 @@
-// ComputeAR Heritage - Data Loader (API optional)
+// ComputeAR Heritage - API Integration
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = 'http://localhost:8080/api';
 
-console.log('ComputeAR Heritage loaded!');
+console.log('ComputeAR Heritage loaded with API!');
 
 // Local Device Mapping (Fallback)
 
@@ -16,67 +16,20 @@ const DEVICE_SLUG_MAP = {
     'MacBook (Intel)': 'macbook'
 };
 
-let allDevicesCache = [];
-
-function getLocalDevices() {
-    if (typeof deviceDatabase === 'undefined' || !deviceDatabase) return [];
-    return Object.values(deviceDatabase);
-}
-
-function getYearRangeForFilter(selectedEra) {
-    switch (selectedEra) {
-        case '1940s':
-            return { start: 1940, end: 1959 };
-        case '1960s':
-            return { start: 1960, end: 1979 };
-        case '1980s':
-            return { start: 1980, end: 1999 };
-        case '2000s':
-            return { start: 2000, end: Number.POSITIVE_INFINITY };
-        default:
-            return null;
-    }
-}
-
-function applyFilter(selectedEra) {
-    if (selectedEra === 'all') {
-        displayDevices(allDevicesCache);
-        return;
-    }
-
-    const range = getYearRangeForFilter(selectedEra);
-    if (!range) {
-        displayDevices(allDevicesCache);
-        return;
-    }
-
-    const filtered = allDevicesCache.filter((device) => {
-        const year = Number(device.year);
-        return Number.isFinite(year) && year >= range.start && year <= range.end;
-    });
-
-    displayDevices(filtered);
-}
-
-// Fetch Devices from Backend (fallback to local device-data.js)
+// Fetch Devices from Backend
 
 async function loadDevices() {
     try {
         const response = await fetch(`${API_BASE_URL}/devices`);
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
         const result = await response.json();
         
         if (result.status === 'success' && result.data) {
             console.log('Loaded devices from API:', result.data);
-            allDevicesCache = result.data;
-            displayDevices(allDevicesCache);
-            return;
+            displayDevices(result.data);
         }
-        throw new Error('API returned empty data');
     } catch (error) {
-        console.warn('Failed to load devices from API, using local data:', error);
-        allDevicesCache = getLocalDevices();
-        displayDevices(allDevicesCache);
+        console.error('Failed to load devices:', error);
+        displayDevices([]);
     }
 }
 
@@ -108,13 +61,10 @@ function createDeviceCard(device) {
     card.setAttribute('data-era', device.era || '1940s');
     
     // Get slug dari mapping
-    const deviceSlug = (typeof device.id === 'string' && device.id)
-        ? device.id
-        : (DEVICE_SLUG_MAP[device.name] || getDeviceSlug(device));
+    const deviceSlug = DEVICE_SLUG_MAP[device.name] || getDeviceSlug(device);
     
     // Check if device has model (berdasarkan nama)
-    const hasModel = Boolean(device.hasModel || device.model_url || device.modelPath) ||
-        ['Apple II', 'Commodore 64', 'IBM PC 5150', 'MacBook (Intel)'].includes(device.name);
+    const hasModel = ['Apple II', 'Commodore 64', 'IBM PC 5150', 'MacBook (Intel)'].includes(device.name);
     
     card.innerHTML = `
         <div class="device-image">
@@ -179,13 +129,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterTabs = document.querySelectorAll('.tab');
     
     filterTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
+        tab.addEventListener('click', async () => {
             filterTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             
             const selectedEra = tab.getAttribute('data-era');
-
-            applyFilter(selectedEra);
+            
+            if (selectedEra === 'all') {
+                await loadDevices();
+            } else {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/devices/era/${selectedEra}`);
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        displayDevices(result.data || []);
+                    }
+                } catch (error) {
+                    console.error('Failed to filter devices:', error);
+                }
+            }
         });
     });
 });
@@ -466,9 +429,9 @@ window.addEventListener('offline', () => {
 // Initialize on Load
 
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('ComputeAR Heritage initialized!');
+    console.log('ComputeAR Heritage initialized with API!');
     
-    // Load devices (API optional)
+    // Load devices from API
     await loadDevices();
     
     // Check if app is running as PWA
@@ -477,4 +440,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-console.log('All systems ready!');
+console.log('All systems ready with API integration!');
