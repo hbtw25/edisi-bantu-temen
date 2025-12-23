@@ -1,6 +1,6 @@
 // ComputeAR Heritage - API Integration
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = '/api';
 
 console.log('ComputeAR Heritage loaded with API!');
 
@@ -22,7 +22,7 @@ async function loadDevices() {
     try {
         const response = await fetch(`${API_BASE_URL}/devices`);
         const result = await response.json();
-        
+
         if (result.status === 'success' && result.data) {
             console.log('Loaded devices from API:', result.data);
             displayDevices(result.data);
@@ -37,16 +37,16 @@ async function loadDevices() {
 
 function displayDevices(devices) {
     const deviceGrid = document.getElementById('deviceGrid');
-    
+
     if (!deviceGrid) return;
-    
+
     deviceGrid.innerHTML = '';
-    
+
     if (devices.length === 0) {
         deviceGrid.innerHTML = '<p style="color: #6b7280; text-align: center; grid-column: 1/-1;">Belum ada data komputer. Sedang memuat...</p>';
         return;
     }
-    
+
     devices.forEach(device => {
         const card = createDeviceCard(device);
         deviceGrid.appendChild(card);
@@ -59,13 +59,13 @@ function createDeviceCard(device) {
     const card = document.createElement('div');
     card.className = 'device-card';
     card.setAttribute('data-era', device.era || '1940s');
-    
+
     // Get slug dari mapping
     const deviceSlug = DEVICE_SLUG_MAP[device.name] || getDeviceSlug(device);
-    
+
     // Check if device has model (berdasarkan nama)
     const hasModel = ['Apple II', 'Commodore 64', 'IBM PC 5150', 'MacBook (Intel)'].includes(device.name);
-    
+
     card.innerHTML = `
         <div class="device-image">
             <img src="${device.image_url || 'https://via.placeholder.com/300x200/db2777/ffffff?text=' + encodeURIComponent(device.name)}" 
@@ -89,7 +89,7 @@ function createDeviceCard(device) {
             </div>
         </div>
     `;
-    
+
     return card;
 }
 
@@ -97,14 +97,14 @@ function createDeviceCard(device) {
 
 function getDeviceSlug(device) {
     const name = device.name.toLowerCase();
-    
+
     if (name.includes('eniac')) return 'eniac';
     if (name.includes('ibm') && name.includes('360')) return 'ibm360';
     if (name.includes('apple ii') || name.includes('apple 2')) return 'appleii';
     if (name.includes('commodore')) return 'c64';
     if (name.includes('ibm') && (name.includes('pc') || name.includes('5150'))) return 'ibmpc';
     if (name.includes('macbook')) return 'macbook';
-    
+
     // Fallback
     return name.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 }
@@ -125,23 +125,23 @@ function viewAR(deviceSlug) {
 
 // Filter Functionality
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const filterTabs = document.querySelectorAll('.tab');
-    
+
     filterTabs.forEach(tab => {
         tab.addEventListener('click', async () => {
             filterTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            
+
             const selectedEra = tab.getAttribute('data-era');
-            
+
             if (selectedEra === 'all') {
                 await loadDevices();
             } else {
                 try {
                     const response = await fetch(`${API_BASE_URL}/devices/era/${selectedEra}`);
                     const result = await response.json();
-                    
+
                     if (result.status === 'success') {
                         displayDevices(result.data || []);
                     }
@@ -158,16 +158,16 @@ document.addEventListener('DOMContentLoaded', function() {
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        
+
         document.querySelectorAll('.nav-link').forEach(l => {
             l.classList.remove('active');
         });
-        
+
         link.classList.add('active');
-        
+
         const targetId = link.getAttribute('href');
         const targetSection = document.querySelector(targetId);
-        
+
         if (targetSection) {
             targetSection.scrollIntoView({
                 behavior: 'smooth',
@@ -181,12 +181,12 @@ document.querySelectorAll('.nav-link').forEach(link => {
 window.addEventListener('scroll', () => {
     const sections = document.querySelectorAll('section[id]');
     const scrollY = window.pageYOffset;
-    
+
     sections.forEach(section => {
         const sectionHeight = section.offsetHeight;
         const sectionTop = section.offsetTop - 100;
         const sectionId = section.getAttribute('id');
-        
+
         if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
@@ -231,7 +231,7 @@ function showARInfo() {
         overflow-y: auto;
         padding: 20px;
     `;
-    
+
     // Create modal content
     modal.innerHTML = `
         <div style="
@@ -321,7 +321,7 @@ function showARInfo() {
             </button>
         </div>
     `;
-    
+
     // Add animations
     const style = document.createElement('style');
     style.textContent = `
@@ -339,16 +339,16 @@ function showARInfo() {
         }
     `;
     document.head.appendChild(style);
-    
+
     document.body.appendChild(modal);
-    
+
     // Close on background click
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             closeARInfoModal();
         }
     });
-    
+
     // Close on ESC key
     document.addEventListener('keydown', function escHandler(e) {
         if (e.key === 'Escape') {
@@ -377,7 +377,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     console.log('Install prompt available');
     e.preventDefault();
     deferredPrompt = e;
-    
+
     setTimeout(() => {
         if (installPrompt) installPrompt.style.display = 'block';
     }, 3000);
@@ -386,10 +386,10 @@ window.addEventListener('beforeinstallprompt', (e) => {
 if (installBtn) {
     installBtn.addEventListener('click', async () => {
         if (!deferredPrompt) return;
-        
+
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        
+
         console.log(`User response: ${outcome}`);
         if (installPrompt) installPrompt.style.display = 'none';
         deferredPrompt = null;
@@ -430,10 +430,10 @@ window.addEventListener('offline', () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('ComputeAR Heritage initialized with API!');
-    
+
     // Load devices from API
     await loadDevices();
-    
+
     // Check if app is running as PWA
     if (window.matchMedia('(display-mode: standalone)').matches) {
         console.log('Running as PWA');

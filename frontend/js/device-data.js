@@ -74,7 +74,7 @@ const deviceDatabase = {
             'Berat': '5.5 kg',
             'Harga': '$1,298 USD (1977)'
         },
-        modelPath: 'http://localhost:8080/static/models/apple-ii.glb',
+        modelPath: 'models/apple-ii.glb',
         timelinePosition: 46.25,
         hasModel: true
     },
@@ -100,7 +100,7 @@ const deviceDatabase = {
             'Storage': 'Cassette tape / 1541 Floppy disk',
             'Harga': '$595 USD (1982)'
         },
-        modelPath: 'http://localhost:8080/static/models/commodore-64.glb',
+        modelPath: 'models/commodore-64.glb',
         timelinePosition: 52.5,
         hasModel: true
     },
@@ -127,7 +127,7 @@ const deviceDatabase = {
             'OS': 'PC DOS 1.0 / MS-DOS',
             'Harga': '$1,565 USD (base model)'
         },
-        modelPath: 'http://localhost:8080/static/models/ibm-pc.glb',
+        modelPath: 'models/ibm-pc.glb',
         timelinePosition: 51.25,
         hasModel: true
     },
@@ -154,7 +154,7 @@ const deviceDatabase = {
             'Baterai': 'Hingga 6 jam',
             'Harga': '$1,099 USD (2006)'
         },
-        modelPath: 'http://localhost:8080/static/models/macbook.glb',
+        modelPath: 'models/macbook.glb',
         timelinePosition: 82.5,
         hasModel: true
     }
